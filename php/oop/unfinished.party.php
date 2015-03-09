@@ -2,14 +2,6 @@
 
 require_once 'inheritance-animal.php';
 
-interface AttackableInterface {
-    public function setHP($hp);
-    public function getHP();
-    public function getName();
-    public function isDead();
-}
-
-
 abstract class Character implements AttackableInterface {
     protected $name;
     protected $hp;
@@ -78,6 +70,12 @@ class Player extends Character {
 
 }
 
+interface AttackableInterface {
+    public function setHP($hp);
+    public function getHP();
+    public function getName();
+    public function isDead();
+}
 
 class KillerDog extends Dog implements AttackableInterface {
     private $hp = 100;
@@ -97,6 +95,49 @@ class KillerDog extends Dog implements AttackableInterface {
 }
 
 
+class CharacterParty {
+    public $character_array = [];
+
+    public function isDead() {
+        for ($i=0; $i<count($this->character_array); $i++) {
+            if (!$this->character_array[$i]->isDead())
+                return false;
+        }
+        return true;
+    }
+
+    public function getHP() {
+        $hp = 0;
+        for ($i=0; $i<count($this->character_array); $i++) {
+            if (!$this->character_array[$i]->isDead())
+                $hp += $this->character_array[$i]->getHP();
+        }
+        return $hp;
+    }
+
+    public function attack(AttackableInterface $antagonist) {
+        while (true) {
+            for ($i=0; $i<count($this->character_array); $i++) {
+                $damage = rand(0,10);
+                $antagonist->setHP( $antagonist->getHP() - $damage );
+                if ($antagonist->isDead()) {
+                    $this->showWinner($this);
+                    return;
+                }
+            }
+
+            $damage = rand(0,10);
+            //$this->hp -= $damage;
+            $this->setHP( $this->getHP() - $damage );
+            if ($this->isDead()) {
+                $this->showWinner($antagonist);
+                return;
+            }
+        }
+    }
+}
+
+
 
 $p = new Player("Julien", 200);
 $e = new Enemy("Molgan", 100);
@@ -108,5 +149,15 @@ if (!$p->isDead()) {
     $dog = new KillerDog;
     $p->attack($dog);
 }
+
+
+
+
+
+
+
+
+
+
 
 
