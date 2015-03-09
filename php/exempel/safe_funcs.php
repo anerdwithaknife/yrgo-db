@@ -17,13 +17,14 @@ function connectToDb() {
 //      HÄMTA VINNARE
 
 function getWinnersByYear($link, $year) {
+    $safe_year = (int)$year;
+
     $sql = "SELECT * FROM nobel
             JOIN nobel_subjects
             ON nobel.subject_id = nobel_subjects.id
-            WHERE yr = '{$year}'";
+            WHERE yr = {$safe_year}";
 
     echo '<pre>'.$sql.'</pre>';
-    return;
 
     $result = mysqli_query($link, $sql);
     if (mysqli_errno($link)) {
@@ -44,10 +45,12 @@ function getWinnersByYear($link, $year) {
 //      LETA VINNARE PÅ NAMN
 
 function getWinnersByName($link, $name) {
+    $safe_name = mysqli_real_escape_string($link, $name);
+
     $sql = "SELECT * FROM nobel
             JOIN nobel_subjects
             ON nobel.subject_id = nobel_subjects.id
-            WHERE name LIKE '%{$name}%'";
+            WHERE name LIKE '%{$safe_name}%'";
 
     echo '<pre>'.$sql.'</pre>';
 
