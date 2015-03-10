@@ -1,7 +1,5 @@
 <?php
 
-require_once 'inheritance-animal.php';
-
 interface AttackableInterface {
     public function setHP($hp);
     public function getHP();
