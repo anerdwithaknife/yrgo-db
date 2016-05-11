@@ -1,4 +1,5 @@
 <?php
+// Animal inheritance
 
 require_once 'inheritance-animal.php';
 
